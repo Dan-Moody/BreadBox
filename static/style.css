@@ -1,4 +1,65 @@
 body {
-    background: #c1c1c1;
-    color: black;
+    background: #f0f0f0;
+    color: #1d1d1d;
+}
+
+#graph-view {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    ;
+}
+
+#graph-view>div {
+    padding: 1rem;
+}
+
+#controls {
+    flex: 1;
+}
+
+#controls>h1, #controls>p {
+    margin-bottom: 2rem;
+}
+
+#controls>div>label {
+    display: block;
+}
+
+#controls>div>input {
+    height: 2rem;
+    font-size: 28px;
+    border: 2px solid rgb(48, 48, 48);
+    border-radius: 4px;
+}
+
+#controls>div {
+    border-bottom: 1px solid rgb(44, 44, 44);
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+
+}
+
+#graph {
+    flex: 2;
+    background-color: #9c9c9c;
+}
+
+#current-info {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#graph>div {
+    margin: 0 0 1rem 0;
+}
+
+#graph>div>h2 {
+    display: inline;
+}
+
+#chartContainer {
+    z-index: 5;
+    /* margin-top: 1rem; */
 }

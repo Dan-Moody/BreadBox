@@ -1,11 +1,61 @@
 <!DOCTYPE html>
-    <head>
-        <link rel="stylesheet" href='/static/style.css' />
-        <title>{{ title }}</title>
-    </head>
+
+<head>
+    <link rel="stylesheet" href='../static/style.css' />
+    <link rel="stylesheet" href='../static/CSSReset.css' />
+    <title>Proofing Box Setup</title>
+</head>
+
+<body>
+    <div id="graph-view">
+        <div id="controls">
+            <h1>Proofing Box Setup</h1>
+            <h3>To use this box: </h3>
+            <p>
+                Set the desired preheat temperature and click preheat.
+                Once the tempurature has reached the desired heat, set the proofing temperatuer and click "proof".
+                After dough has doubled in size click the turn off button to stop the heating process.
+            </p>
+
+            <div>
+                <label for="preheatTemp">Temperature in Fahrenheight (70-100)</label>
+                <input type="number" id="preheatTemp" name="Preheat Temperature" min="70" max="100">
+                <button type="button" onclick="preheat()">Preheat</button>
+            </div>
+            <div>
+                <label for="proofTemp">Temperature in Fahrenheight (70-100)</label>
+                <input type="number" id="proofTemp" name="Proofing Temperature" min="70" max="100">
+                <button type="button" onclick="proof()">Proof</button>
+            </div>
+            <div>
+                <button type="button" onclick="turnOff()">Turn Off</button>
+            </div>
+        </div>
+        <div id="graph">
+            <div id="current-info">
+                <h2>
+                    Temperature:
+                    <span id="temperature">0</span>
+                </h2>
+                <h2>
+                    Humidity:
+                    <span id="humidity">0</span>
+                </h2>
+                <h2>
+                    Light Status:
+                    <span id="light">OFF</span>
+                </h2>
+            </div>
+            <div id="chartContainer" style="height: 70vh; width: 100%;"></div>
+        </div>
+
+    </div>
+
+
+
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script src="../static/graph.js"></script>
+
     <body>
-        <h1>{{ title }}</h1>
-        <h2>Temperature: {{ temperature }}</h2>
-        <h2>Humidity: {{ humidity }}</h2>
-    <body>
-</html>
+
+        </html>
