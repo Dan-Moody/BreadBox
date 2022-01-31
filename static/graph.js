@@ -62,7 +62,7 @@ var checkTemp = function(temp) {
 var temperatureAJAX = function(temp) {
     $.ajax({
 
-        url: '/',
+        url: '/sensorData',
         type: 'GET',
         data: {
             'temp': temp

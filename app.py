@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, url_for, request, jsonify, session
 import Adafruit_DHT
 import RPi.GPIO as GPIO
 
@@ -23,6 +23,18 @@ def index():
 @app.route('/status', methods=['POST','GET'])
 def status():
     return render_template('status.html')
+
+@app.route('/sensorData', methods=['POST','GET'])
+def sensorData():
+    if request.method == "GET":
+        temp = request.get_json()
+        print(temp)
+        humidity, temperature = Adafruit_DHT.read_retry(DHTSensor, GPIO_Pin)
+        results = {
+            'humidity': humidity,
+            'temperature': temperature
+        }
+    return jsonify(results)
 	
 if __name__ == '__main__':
 	app.run(debug=True,port=8080, host='0.0.0.0')
