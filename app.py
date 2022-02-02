@@ -46,7 +46,7 @@ def sensorData():
 	global isLightOn
 	global setTemp
 	if request.method == "POST":
-		temp = request.data
+		temp = request.args.get('temp')
 		print("set temp post")
 		print(temp)
 		print(request)

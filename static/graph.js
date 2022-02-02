@@ -125,20 +125,18 @@ var intervalID = setInterval(temperatureAJAX, 1000);
 // Sends AJAX request to flask for temperature and humidity
 // temp: the desired temperature to heat the box to
 var setTemp = async function(temp) {
-    console.log(temp);
     $.ajax({
         url: '/sensorData',
         type: 'POST',
         data: {
             'temp': temp
         },
-        dataType: 'text/json',
+        dataType: 'json',
         success: function (data) {
             console.log(data);
         },
         error: function (request, error) {
             console.log("Request: " + JSON.stringify(request));
-            
         }
     });
 }
