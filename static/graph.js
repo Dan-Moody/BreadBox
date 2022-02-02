@@ -42,8 +42,37 @@ humids.push({
 xVal++;
 chart.render();
 
+const tempElement = document.querySelector("#temperature");
+const humidElement = document.querySelector("#humidity");
+const lightStatus = document.querySelector("#light");
+const isRunningView = document.querySelector("#isRunning");
+const desiredTemp = document.querySelector("#desiredTemp");
+
+
 // Updates the table with the latest temp and humidity
-var updateChart = function (temp, humid) {
+// temp: the current temperature in the box
+// humid: the current humidity in the box
+// isRunning: true if the pi is using
+// isLightOn: true if the light in the box is on
+// setTemp: current target temperature of the box
+var updateChart = function (temp, humid, isRunning, isLightOn, setTemp) {
+    //console.log("setTemp: " + setTemp);
+    desiredTemp.innerHTML = setTemp;
+    tempElement.innerHTML = temp;
+    humidElement.innerHTML = humid;
+    
+    if (isLightOn) {
+        lightStatus.innerHTML = "On";
+    } else {
+        lightStatus.innerHTML = "Off";
+    }
+    if (isRunning) {
+        isRunningView.innerHTML = "Yes";
+    } else {
+        isRunningView.innerHTML = "No";
+    }
+    
+    
     temp = (temp * (9/5))+32
     temps.push({
         x: xVal,
@@ -75,18 +104,55 @@ var checkTemp = function(temp) {
 }
 
 // Sends AJAX request to flask for temperature and humidity
-var temperatureAJAX = async function(temp) {
+var temperatureAJAX = async function() {
     $.ajax({
-
         url: '/sensorData',
         type: 'GET',
+        data: {},
+        dataType: 'json',
+        success: function (data) {
+            //console.log(data);
+            updateChart(data["temperature"], data["humidity"], data["isRunning"], data["isLightOn"], data["setTemp"]);
+        },
+        error: function (request, error) {
+            console.log("Request: " + JSON.stringify(request));
+        }
+    });
+}
+
+var intervalID = setInterval(temperatureAJAX, 1000);
+
+// Sends AJAX request to flask for temperature and humidity
+// temp: the desired temperature to heat the box to
+var setTemp = async function(temp) {
+    console.log(temp);
+    $.ajax({
+        url: '/sensorData',
+        type: 'POST',
         data: {
             'temp': temp
         },
-        dataType: 'json',
+        dataType: 'text/json',
         success: function (data) {
             console.log(data);
-            updateChart(data["temperature"], data["humidity"]);
+        },
+        error: function (request, error) {
+            console.log("Request: " + JSON.stringify(request));
+            
+        }
+    });
+}
+
+// Sends AJAX request to flask to turn off light bulb
+var turnOffPi = async function() {
+    $.ajax({
+        url: '/turnOff',
+        type: 'GET',
+        data: {},
+        dataType: 'json',
+        success: function (data) {
+            console.log("Box heating element is off");
+            isRunning.innerHTML = "No";
         },
         error: function (request, error) {
             console.log("Request: " + JSON.stringify(request));
@@ -102,7 +168,7 @@ var preheat = function() {
     if (!checkTemp(temp)) {
         return;
     }
-    temperatureAJAX(temp)
+    setTemp(temp)
 }
 
 // On click for the proofing button and related input
@@ -112,11 +178,12 @@ var proof = function() {
     if (!checkTemp(temp)) {
         return;
     }
-    temperatureAJAX(temp)
+    setTemp(temp)
 }
 
 
 // On click for the turn off button
 var turnOff = function() {
     console.log("Turning off");
+    turnOffPi();
 }
