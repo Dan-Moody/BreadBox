@@ -8,11 +8,15 @@ var chart = new CanvasJS.Chart("chartContainer", {
     },
     axisY: {
         title: "Temperature (in F)",
-        suffix: " F"
+        suffix: " F",
+        viewportMinimum: 32,
+        viewportMaximum: 110
     },
     axisY2: {
         title: "Humidity (in %)",
-        suffix: "%"
+        suffix: "%",
+        viewportMinimum: 0,
+        viewportMaximum: 100
     },
     data: [{
         name: "Humidity",
@@ -39,7 +43,7 @@ humids.push({
     x: xVal,
     y: 0
 });
-xVal++;
+xVal+=3;
 chart.render();
 
 const tempElement = document.querySelector("#temperature");
@@ -57,6 +61,8 @@ const desiredTemp = document.querySelector("#desiredTemp");
 // setTemp: current target temperature of the box
 var updateChart = function (temp, humid, isRunning, isLightOn, setTemp) {
     //console.log("setTemp: " + setTemp);
+    temp = Math.round((temp * (9/5))+32)
+    
     desiredTemp.innerHTML = setTemp;
     tempElement.innerHTML = temp;
     humidElement.innerHTML = humid;
@@ -73,7 +79,7 @@ var updateChart = function (temp, humid, isRunning, isLightOn, setTemp) {
     }
     
     
-    temp = (temp * (9/5))+32
+    
     temps.push({
         x: xVal,
         y: temp
@@ -82,7 +88,7 @@ var updateChart = function (temp, humid, isRunning, isLightOn, setTemp) {
         x: xVal,
         y: humid
     });
-    xVal++;
+    xVal+=3;
 
     if (temps.length > dataLength) {
         temps.shift();
@@ -120,7 +126,7 @@ var temperatureAJAX = async function() {
     });
 }
 
-var intervalID = setInterval(temperatureAJAX, 1000);
+var intervalID = setInterval(temperatureAJAX, 3000);
 
 // Sends AJAX request to flask for temperature and humidity
 // temp: the desired temperature to heat the box to
@@ -128,9 +134,8 @@ var setTemp = async function(temp) {
     $.ajax({
         url: '/sensorData',
         type: 'POST',
-        data: {
-            'temp': temp
-        },
+        data: JSON.stringify({'temp': temp}),
+        contentType: "application/json",
         dataType: 'json',
         success: function (data) {
             console.log(data);
